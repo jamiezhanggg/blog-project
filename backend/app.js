@@ -1,9 +1,10 @@
 const express = require('express');
-require('dotenv').config({path:'.env'});
-
-const PORT = process.env.PORT || 8000;
+const initDB = require('./init/initDB');
+const initServer = require('./init/initServer');
 
 const app = express();
-app.listen(PORT, ()=>{
-    console.log(`Server running on http://localhost:${PORT}`);
-})
+const main = async () => {
+    await initDB();
+    await initServer(app);
+}
+main();
