@@ -12,7 +12,9 @@ const matchPassword = (savedPassword, usrPassword) => {
     return new Promise((resolve, reject) => {
         const md5Pwd = md5(usrPassword + salt);
         let match = md5Pwd == savedPassword ? true:false;
-        resolve(match);
+        if(match)
+            resolve(true);
+        reject(false);
     })
 }
-module.exports = {md5Password, matchPassword}
+module.exports = {md5Password, matchPassword};
