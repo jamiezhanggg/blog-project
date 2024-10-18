@@ -79,11 +79,41 @@ module.exports.getUser = async (req, res, next) => {
         if(!user)
             throw new HttpException(401, 'user not found', 'user not found');
         delete user.dataValues.password;
-        user.dataValues.token = user.token;
+        // user.dataValues.token = user.token;
         return res.status(200).json({
             status: 1,
             message: 'get user request succeed',
             data: user.dataValues
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports.updateUser = async (req, res, next) => {
+    try{
+        const {email} = req.user;
+        const user = await User.findByPk(email);
+        if(!user)
+            throw new HttpException(401, 'user not found', 'user not found');
+        delete user.dataValues.password;
+        let updatedUser = req.body.user;
+        let encryptedPassword = null;
+        Object.keys(user).forEach(key => {
+            if(key=='password') {
+                encryptedPassword = md5Password(updatedUser.password);
+            }
+        })
+        if(encryptedPassword){
+            updatedUser.password = encryptedPassword;
+        }
+        delete updatedUser.email;
+        await user.update(updatedUser);
+        delete user.dataValues.password;
+        return res.status(200).json({
+            status:1,
+            message: "user updated successfully",
+            data:user.dataValues
         })
     } catch (error) {
         next(error);

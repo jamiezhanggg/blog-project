@@ -2,8 +2,6 @@ const { decode } = require('../../utils/jwt');
 const HttpException = require('../../exceptions/http.exceptions');
 
 module.exports.authMiddleware = async (req, res, next) => {
-    console.log(req.headers.authorization);
-
     const authHeader = req.headers.authorization;
     if(!authHeader)
         return new HttpException(401, 'missing authorization', 'missing authorization');
@@ -15,7 +13,6 @@ module.exports.authMiddleware = async (req, res, next) => {
     try {
         const user = await decode(authArr[1]);
         req.user = user;
-        console.log("from auth user:", user);
         req.token = authArr[1];
         return next();
     } catch (error) {
