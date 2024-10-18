@@ -59,7 +59,7 @@ const initDB = ()=>{
             await dbConnection();
             // init relation
             initRelation();
-            await sequelize.sync({alter:true});
+            await sequelize.sync();
             resolve();
         } catch (error) {
             console.log(error);

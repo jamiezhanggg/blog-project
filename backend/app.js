@@ -25,6 +25,6 @@ const main = async () => {
     initRoute(app);
 
     app.use(noMatchMiddleware);
-    app.use(errorMiddleWare)
+    app.use(errorMiddleWare);
 }
 main();

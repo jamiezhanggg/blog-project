@@ -4,14 +4,14 @@ const User = require('../model/user');
 const { md5Password, matchPassword } = require("../utils/md5");
 const { sign, decode } = require('../utils/jwt');
 
-module.exports.createUser = async (req, res) => {
+module.exports.createUser = async (req, res, next) => {
     try {
         let { username, password, email } = req.body.user;
         let { error, validate } = validateCreateUser(username, password, email);
         if (!validate)
             throw new HttpException(400, 'validation error', error);
         const existUser = await User.findByPk(email);
-        if (existUser) throw HttpException(400, 'email already exists', 'email already exists');
+        if (existUser) throw new HttpException(400, 'email already exists', 'email already exists');
         const pwd = await md5Password(password);
         const user = User.create({
             username,
@@ -41,11 +41,11 @@ module.exports.createUser = async (req, res) => {
     }
 }
 
-module.exports.login = async (req, res) => {
+module.exports.login = async (req, res, next) => {
     try{
 
         let {email, password} = req.body.user;
-        let {error, validate} = user.validateUserLogin(email, password);
+        let {error, validate} = validateUserLogin(email, password);
         if(!validate)
             throw new HttpException(400, 'validation error', error);
         let user = await User.findByPk(email);
@@ -60,7 +60,7 @@ module.exports.login = async (req, res) => {
         delete user.dataValues.password;
         user.dataValues.token = await sign(
             user.dataValues.username,
-            user.dataValues.password
+            user.dataValues.email
         );
         return res.status(200).json({
             status: 1,
@@ -72,17 +72,20 @@ module.exports.login = async (req, res) => {
     }
 }
 
-module.exports.getUser = async (req, res) => {
-    res.json({
-        status: 200,
-        message: "success",
-        data: {
-            code: 1,
-            message: "getting user request succeed!",
-            data: {
-                name: "Jamie",
-                age: 23
-            }
-        }
-    })
+module.exports.getUser = async (req, res, next) => {
+    try {
+        const {email} = req.user;
+        const user = await User.findByPk(email);
+        if(!user)
+            throw new HttpException(401, 'user not found', 'user not found');
+        delete user.dataValues.password;
+        user.dataValues.token = user.token;
+        return res.status(200).json({
+            status: 1,
+            message: 'get user request succeed',
+            data: user.dataValues
+        })
+    } catch (error) {
+        next(error);
+    }
 }
