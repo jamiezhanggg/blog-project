@@ -99,11 +99,11 @@ module.exports.updateUser = async (req, res, next) => {
         delete user.dataValues.password;
         let updatedUser = req.body.user;
         let encryptedPassword = null;
-        Object.keys(user).forEach(key => {
+        for (const key of Object.keys(updatedUser)) {
             if(key=='password') {
-                encryptedPassword = md5Password(updatedUser.password);
+                encryptedPassword = await md5Password(updatedUser.password);
             }
-        })
+        }
         if(encryptedPassword){
             updatedUser.password = encryptedPassword;
         }
