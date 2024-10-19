@@ -6,5 +6,6 @@ const FollowController = require('../controller/follow');
 
 router.post('/:username', authMiddleware, FollowController.follow);
 router.delete('/:username', authMiddleware, FollowController.unfollow);
+router.get('/:username', authMiddleware, FollowController.getFollowers);
 
 module.exports = router;

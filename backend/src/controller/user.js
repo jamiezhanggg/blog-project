@@ -52,8 +52,7 @@ module.exports.login = async (req, res, next) => {
         if(!user) {
             throw new HttpException(401, 'user donnot exist', 'user donnot exist');
         }
-        const encryptedPassword = await md5Password(password);
-        const match = await matchPassword(encryptedPassword, password);
+        const match = await matchPassword(user.dataValues.password, password);
         if(!match) {
             throw new HttpException(401, 'wrong password', 'wrong password');
         }

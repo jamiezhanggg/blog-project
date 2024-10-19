@@ -8,13 +8,16 @@ const md5Password = (password) => {
     })
 }
 
-const matchPassword = (savedPassword, usrPassword) => {
+const matchPassword = async (savedPassword, usrPassword) => {
     return new Promise((resolve, reject) => {
         const md5Pwd = md5(usrPassword + salt);
         let match = md5Pwd == savedPassword ? true:false;
-        if(match)
+        if(match) {
             resolve(true);
-        reject(false);
+        }
+        else {
+            resolve(false);
+        }
     })
 }
 module.exports = {md5Password, matchPassword};
