@@ -4,7 +4,13 @@ const HttpException = require('../exceptions/http.exceptions');
 // get all tags
 module.exports.getTags = async (req, res, next) => {
     try{
-        const taglist = await Tag.findAll();
+        const tags = await Tag.findAll();
+        const taglist = [];
+        if(tags) {
+            tags.forEach(element => {
+                taglist.push(element.dataValues.name);
+            });
+        }
         console.log(taglist);
         res.status(200).json({
             status:1,

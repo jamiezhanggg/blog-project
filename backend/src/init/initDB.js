@@ -60,6 +60,7 @@ const initDB = ()=>{
             // init relation
             initRelation();
             await sequelize.sync();
+            // await sequelize.sync({ alter: true });
             resolve();
         } catch (error) {
             console.log(error);

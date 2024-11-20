@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 const sequelize = require('../db/sequelize')
 
 const Article = sequelize.define('Article', {
-    id:{
+    slug:{
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false

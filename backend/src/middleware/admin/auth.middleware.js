@@ -4,7 +4,7 @@ const HttpException = require('../../exceptions/http.exceptions');
 module.exports.authMiddleware = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if(!authHeader)
-        return new HttpException(401, 'missing authorization', 'missing authorization');
+        return next(new HttpException(401, 'missing authorization', 'missing authorization'));
     const authArr = authHeader.split(' ');
     if(authArr[0]!='Token')
         return new HttpException(401, 'missing token', 'missing token');
