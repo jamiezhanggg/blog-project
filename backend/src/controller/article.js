@@ -158,7 +158,7 @@ module.exports.getFollowingArticle = async (req, res, next) => {
 }
 
 module.exports.getArticles = async (req, res, next) => {
-    try{
+    try {
         const { tag, author, limit = 5, offset = 0 } = req.query;
         let allArticles = [];
         if (tag && !author) {
@@ -173,7 +173,7 @@ module.exports.getArticles = async (req, res, next) => {
                     },
                 ], limit: parseInt(limit), offset: parseInt(offset)
             })
-    
+
         } else if (!tag && author) {
             allArticles = await Article.findAll({
                 include: [{
@@ -200,7 +200,7 @@ module.exports.getArticles = async (req, res, next) => {
             })
         } else {
             allArticles = await Article.findAll({
-                include:Tag, limit: parseInt(limit), offset: parseInt(offset)
+                include: Tag, limit: parseInt(limit), offset: parseInt(offset)
             })
         }
         let results = []
@@ -214,7 +214,7 @@ module.exports.getArticles = async (req, res, next) => {
             message: 'retreive articles succeed',
             data: results
         })
-    } catch(e) {
+    } catch (e) {
         next(e);
     }
 }
